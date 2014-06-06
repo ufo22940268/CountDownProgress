@@ -283,7 +283,7 @@ public class HoloCircularProgressBar extends View {
         tp.setTextSize(mTextSize);
 
         //TODO Change the position with the accurate x y to make text centered in circle.
-        canvas.drawText(getText(), -50, 25, tp);
+        canvas.drawText(getText(), -pxFromDp(25), pxFromDp(12.5f), tp);
         canvas.restore();
 
 
@@ -324,6 +324,10 @@ public class HoloCircularProgressBar extends View {
 			canvas.restore();
 		}
 	}
+
+    private float pxFromDp(float dp) {
+        return dp * this.getContext().getResources().getDisplayMetrics().density;
+    }
 
 	/*
 	 * (non-Javadoc)
