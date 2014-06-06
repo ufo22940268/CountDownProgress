@@ -1,12 +1,5 @@
 package de.passsy.circularprogressbarsample;
 
-import java.util.Random;
-
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +13,13 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
+
+import java.util.Random;
+
 import de.passsy.holocircularprogressbar.HoloCircularProgressBar;
 
 /**
@@ -115,7 +115,7 @@ public class CircularProgressBarSample extends Activity {
 					mOne.setEnabled(false);
 					mZero.setEnabled(false);
 
-					animate(mHoloCircularProgressBar, new AnimatorListener() {
+					animate(mHoloCircularProgressBar, new Animator.AnimatorListener() {
 
 						@Override
 						public void onAnimationCancel(final Animator animation) {
@@ -172,19 +172,19 @@ public class CircularProgressBarSample extends Activity {
 	 * @param listener
 	 *            the listener
 	 */
-	private void animate(final HoloCircularProgressBar progressBar, final AnimatorListener listener) {
+	private void animate(final HoloCircularProgressBar progressBar, final Animator.AnimatorListener listener) {
 		final float progress = (float) (Math.random() * 2);
 		int duration = 3000;
 		animate(progressBar, listener, progress, duration);
 	}
 
-	private void animate(final HoloCircularProgressBar progressBar, final AnimatorListener listener,
+	private void animate(final HoloCircularProgressBar progressBar, final Animator.AnimatorListener listener,
 			final float progress, final int duration) {
 
 		mProgressBarAnimator = ObjectAnimator.ofFloat(progressBar, "progress", progress);
 		mProgressBarAnimator.setDuration(duration);
 
-		mProgressBarAnimator.addListener(new AnimatorListener() {
+		mProgressBarAnimator.addListener(new Animator.AnimatorListener() {
 
 			@Override
 			public void onAnimationCancel(final Animator animation) {
@@ -207,7 +207,7 @@ public class CircularProgressBarSample extends Activity {
 			mProgressBarAnimator.addListener(listener);
 		}
 		mProgressBarAnimator.reverse();
-		mProgressBarAnimator.addUpdateListener(new AnimatorUpdateListener() {
+		mProgressBarAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
 			@Override
 			public void onAnimationUpdate(final ValueAnimator animation) {

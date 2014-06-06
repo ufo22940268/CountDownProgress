@@ -31,6 +31,6 @@ android {
 }
 
 dependencies {
-//    compile ''
-    compile 'com.google.code.gson:gson:2.2.2'
+    compile files('libs/nineoldandroids-2.4.0.jar')
 }
+
