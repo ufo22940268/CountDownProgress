@@ -20,4 +20,5 @@ Add the View in your Layout
         android:layout_height="wrap_content"/>
   
 ### Screenshot
-    ![](./raw/countdown.png)
+
+![](./raw/countdown.png)
