@@ -18,6 +18,10 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
+
 /**
  * The Class HoloCircularProgressBar.
  * 
@@ -198,6 +202,7 @@ public class HoloCircularProgressBar extends View {
 	private boolean mIsThumbEnabled = false;
     private String mText = "12";
     private float mTextSize = 40;
+    private ObjectAnimator mProgressBarAnimator;
 
     /**
 	 * Instantiates a new holo circular progress bar.
@@ -324,6 +329,46 @@ public class HoloCircularProgressBar extends View {
 			canvas.restore();
 		}
 	}
+
+    public void animate(final Animator.AnimatorListener listener,
+                         final float progress, final int duration) {
+
+        mProgressBarAnimator = ObjectAnimator.ofFloat(this, "progress", progress);
+        mProgressBarAnimator.setDuration(duration);
+
+        mProgressBarAnimator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationCancel(final Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(final Animator animation) {
+                HoloCircularProgressBar.this.setProgress(progress);
+            }
+
+            @Override
+            public void onAnimationRepeat(final Animator animation) {
+            }
+
+            @Override
+            public void onAnimationStart(final Animator animation) {
+            }
+        });
+        if (listener != null) {
+            mProgressBarAnimator.addListener(listener);
+        }
+        mProgressBarAnimator.reverse();
+        mProgressBarAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(final ValueAnimator animation) {
+                setProgress((Float) animation.getAnimatedValue());
+            }
+        });
+        HoloCircularProgressBar.this.setMarkerProgress(progress);
+        mProgressBarAnimator.start();
+    }
 
     private float pxFromDp(float dp) {
         return dp * this.getContext().getResources().getDisplayMetrics().density;

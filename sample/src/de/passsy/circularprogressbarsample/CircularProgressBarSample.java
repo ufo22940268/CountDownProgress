@@ -85,7 +85,7 @@ public class CircularProgressBarSample extends Activity {
 				if (mProgressBarAnimator != null) {
 					mProgressBarAnimator.cancel();
 				}
-				animate(mHoloCircularProgressBar, null, 0.1f, 1000);
+				mHoloCircularProgressBar.animate(null, 0.1f, 1000);
 				mHoloCircularProgressBar.setMarkerProgress(0f);
 
 			}
@@ -99,7 +99,7 @@ public class CircularProgressBarSample extends Activity {
 				if (mProgressBarAnimator != null) {
 					mProgressBarAnimator.cancel();
 				}
-				animate(mHoloCircularProgressBar, null, 0.5f, 1000);
+				mHoloCircularProgressBar.animate(null, 0.5f, 1000);
 				mHoloCircularProgressBar.setMarkerProgress(1f);
 
 			}
@@ -175,47 +175,7 @@ public class CircularProgressBarSample extends Activity {
 	private void animate(final HoloCircularProgressBar progressBar, final Animator.AnimatorListener listener) {
 		final float progress = (float) (Math.random() * 2);
 		int duration = 3000;
-		animate(progressBar, listener, progress, duration);
-	}
-
-	private void animate(final HoloCircularProgressBar progressBar, final Animator.AnimatorListener listener,
-			final float progress, final int duration) {
-
-		mProgressBarAnimator = ObjectAnimator.ofFloat(progressBar, "progress", progress);
-		mProgressBarAnimator.setDuration(duration);
-
-		mProgressBarAnimator.addListener(new Animator.AnimatorListener() {
-
-			@Override
-			public void onAnimationCancel(final Animator animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(final Animator animation) {
-				progressBar.setProgress(progress);
-			}
-
-			@Override
-			public void onAnimationRepeat(final Animator animation) {
-			}
-
-			@Override
-			public void onAnimationStart(final Animator animation) {
-			}
-		});
-		if (listener != null) {
-			mProgressBarAnimator.addListener(listener);
-		}
-		mProgressBarAnimator.reverse();
-		mProgressBarAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-			@Override
-			public void onAnimationUpdate(final ValueAnimator animation) {
-				progressBar.setProgress((Float) animation.getAnimatedValue());
-			}
-		});
-		progressBar.setMarkerProgress(progress);
-		mProgressBarAnimator.start();
+		progressBar.animate(listener, progress, duration);
 	}
 
 	/*
