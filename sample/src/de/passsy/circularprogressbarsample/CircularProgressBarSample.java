@@ -64,6 +64,7 @@ public class CircularProgressBarSample extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        System.out.println("CircularProgressBarSample.onCreate");
 
         mHoloCircularProgressBar = (HoloCircularProgressBar) findViewById(R.id.holoCircularProgressBar1);
 
@@ -73,6 +74,7 @@ public class CircularProgressBarSample extends Activity {
         new CountDownTimer(TIME_RANGE * 1000, 1 * 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                System.out.println("millisUntilFinished = " + millisUntilFinished);
                 mHoloCircularProgressBar.setLeftTime((int) (millisUntilFinished/1000));
             }
 
