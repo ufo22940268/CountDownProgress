@@ -13,8 +13,10 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Layout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -61,8 +63,9 @@ public class HoloCircularProgressBar extends View {
 	 * used to save the color of the progress
 	 */
 	private static final String INSTANCE_STATE_PROGRESS_COLOR = "progress_color";
+    private static final int DURATION = 1000;
 
-	/**
+    /**
 	 * true if not all properties are set. then the view isn't drawn and there
 	 * are no errors in the LayoutEditor
 	 */
@@ -100,7 +103,7 @@ public class HoloCircularProgressBar extends View {
 	/**
 	 * the color of the progress.
 	 */
-	private int mProgressColor;
+	private int mProgressColor = Color.RED;
 
 	/**
 	 * paint for the progress.
@@ -191,6 +194,8 @@ public class HoloCircularProgressBar extends View {
 	 */
 	private boolean mOverrdraw = false;
 
+    private int timeRange = -1;
+
 	/**
 	 * the rect for the thumb square
 	 */
@@ -203,6 +208,7 @@ public class HoloCircularProgressBar extends View {
     private String mText = "12";
     private float mTextSize = 40;
     private ObjectAnimator mProgressBarAnimator;
+    private int mTimeRange;
 
     /**
 	 * Instantiates a new holo circular progress bar.
@@ -282,16 +288,6 @@ public class HoloCircularProgressBar extends View {
 		// them we let Canvas do the work for us.
 		canvas.translate(mTranslationOffsetX, mTranslationOffsetY);
 
-        canvas.save();
-        TextPaint tp = new TextPaint();
-        tp.setColor(Color.RED);
-        tp.setTextSize(mTextSize);
-
-        //TODO Change the position with the accurate x y to make text centered in circle.
-        canvas.drawText(getText(), -pxFromDp(25), pxFromDp(12.5f), tp);
-        canvas.restore();
-
-
 		final float progressRotation = getCurrentRotation();
 
 		// draw the background
@@ -301,19 +297,6 @@ public class HoloCircularProgressBar extends View {
 
 		// draw the progress or a full circle if overdraw is true
 		canvas.drawArc(mCircleBounds, 270, mOverrdraw ? 360 : progressRotation, false, mProgressColorPaint);
-
-
-		// draw the marker at the correct rotated position
-//		if (mIsMarkerEnabled) {
-//			final float markerRotation = getMarkerRotation();
-//
-//			canvas.save();
-//			canvas.rotate(markerRotation - 90);
-//			canvas.drawLine((float) (mThumbPosX + mThumbRadius / 2 * 1.4), mThumbPosY,
-//					(float) (mThumbPosX - mThumbRadius / 2 * 1.4), mThumbPosY, mMarkerColorPaint);
-//			canvas.restore();
-//		}
-
 
 		if (isThumbEnabled()) {
 			// draw the thumb square at the correct rotated position
@@ -328,7 +311,32 @@ public class HoloCircularProgressBar extends View {
 			canvas.drawRect(mSquareRect, mThumbColorPaint);
 			canvas.restore();
 		}
-	}
+
+        canvas.save();
+        TextPaint tp = new TextPaint();
+        tp.setColor(Color.RED);
+        tp.setTextSize(mTextSize);
+
+        float desiredWidth = Layout.getDesiredWidth(mText, tp);
+        //TODO Change the position with the accurate x y to make text centered in circle.
+        canvas.drawText(getText(), -desiredWidth/2, mTextSize/2 - pxFromDp(4), tp);
+        canvas.restore();
+    }
+
+    public void setLeftTime(int leftTime) {
+        mTimeRange = getTimeRange();
+        if (mTimeRange == -1) {
+            throw new RuntimeException("Haven't set timerange. Time range must be set before settime.");
+        }
+
+        if (leftTime > getTimeRange()) {
+            Log.e(TAG, "Time can't larger then leftTime range.'");
+        }
+
+        setText(String.valueOf(leftTime));
+        float progress = ((float) mTimeRange - leftTime) / mTimeRange;
+        animate(null, progress, DURATION);
+    }
 
     public void animate(final Animator.AnimatorListener listener,
                          final float progress, final int duration) {
@@ -711,5 +719,13 @@ public class HoloCircularProgressBar extends View {
     public void setTextSize(float textSize) {
         mTextSize = textSize;
         invalidate();
+    }
+
+    public int getTimeRange() {
+        return timeRange;
+    }
+
+    public void setTimeRange(int timeRange) {
+        this.timeRange = timeRange;
     }
 }
