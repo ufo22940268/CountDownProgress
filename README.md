@@ -16,7 +16,7 @@ Add to build.gradle
 
     me.biubiubiu.countdownprogress:library:1.0.0
 
-Add the View in your Layout
+Add in Layout xml
 
     <de.passsy.holocircularprogressbar.HoloCircularProgressBar
         android:id="@+id/holoCircularProgressBar1"
